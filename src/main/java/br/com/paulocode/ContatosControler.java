@@ -32,4 +32,14 @@ public class ContatosControler {
 		return modelAndView;
 	}
 
+	@GetMapping("/contatos/novo")
+	public ModelAndView novo() {
+		ModelAndView modelAndView = new ModelAndView("formulario");
+
+		modelAndView.addObject("contato",new Contato());
+
+		return modelAndView;
+
+	}
+
 }
