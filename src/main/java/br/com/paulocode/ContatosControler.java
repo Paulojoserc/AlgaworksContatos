@@ -59,23 +59,43 @@ public class ContatosControler {
 	@GetMapping("/contatos/{id}/editar")
 	public ModelAndView editar(@PathVariable String id) {
 		ModelAndView modelAndView = new ModelAndView("formulario");
-		
+
 		Contato contato = procurarContato(id);
-		
+
 		modelAndView.addObject("contato", contato);
-		
+
 		return modelAndView;
 	}
 
-	public Contato procurarContato(String id) {
-		for (int i = 0; i < LISTA_CONTATOS.size(); i++) {
-			Contato contato = LISTA_CONTATOS.get(i);
+	@PostMapping("/contatos/{id}")
+	public String atualizar(Contato contato) {
+		Integer indice = procurarIndiceContato(contato.getId());
+		
+		Contato contatoVelho = LISTA_CONTATOS.get(indice);
+		LISTA_CONTATOS.remove(contatoVelho);
+		LISTA_CONTATOS.add(indice, contato);
+		return "redirect:/contatos";
+	}
 
-			if (contato.getId().equals(id)) {
-				return contato;
-			}
+	// ----------------------------------------------Métodos auxiliares
+	private Contato procurarContato(String id) {
+		Integer indice = procurarIndiceContato(id);
+
+		if (indice != null) {
+			Contato contato = LISTA_CONTATOS.get(indice);
+			return contato;
 		}
 		return null;
 	}
 
+	private Integer procurarIndiceContato(String id) {
+		for (int i = 0; i < LISTA_CONTATOS.size(); i++) {
+			Contato contato = LISTA_CONTATOS.get(i);
+
+			if (contato.getId().equals(id)) {
+				return i;
+			}
+		}
+		return null;
+	}
 }
